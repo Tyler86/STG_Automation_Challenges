@@ -1,0 +1,10 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Stg Challenges" >
+    <test name="Challenge One" >
+        <parameter name="url" value="https://www.skiutah.com"></parameter>
+        <classes>
+            <class name="Challenge_One_Test" />
+        </classes>
+    </test>
+</suite>
