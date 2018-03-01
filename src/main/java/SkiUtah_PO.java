@@ -1,7 +1,6 @@
 import Common.Report;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import com.sun.imageio.plugins.wbmp.WBMPImageReader;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -51,6 +50,46 @@ public class SkiUtah_PO {
 
     }
 
+    public void clickOnExploreUtah(){
+        try {
+
+
+            String exploreUtahx = "(//h1[@class = 'map-Container-menuTitle'])[2]/span[1]";
+           wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(exploreUtahx)));
+            WebElement exploreUtah = driver.findElement(By.xpath(exploreUtahx));
+            exploreUtah.click();//sendKeys(Keys.SPACE);
+           // ((JavascriptExecutor)driver).executeScript("window.scrollBy(0,400)", "");
+        } catch (Exception e) {
+            report.fail("Failed to click on Explore Utah");
+        }
+    }
+    public void clickOnResort(String resortName) {
+        try {
+            String waitForMenuToClose = "//div[@class = 'map-Container-compare is-expanded']";
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(waitForMenuToClose)));
+            resortName = resortName.toLowerCase().replace(" ", "-");
+            String resortx= "(//label[contains(@for,'"+resortName+"')])[1]";
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(resortx)));
+            WebElement resort = driver.findElement(By.xpath(resortx));
+            resort.click();
+        } catch (Exception e) {
+            report.fail("Failed To click on Resort");
+        }
+    }
+    public void printTimeFromAirport(String resortName){
+        try {
+            resortName = resortName.toLowerCase().replace(" ", "-");
+            String timeFromairportX = "(//div[contains(@class,'"+resortName+"')])[1]//span[3]";
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(timeFromairportX)));
+            WebElement timeFromAirport = driver.findElement(By.xpath(timeFromairportX));
+            String time = timeFromAirport.getText();
+            System.out.println("Time from the airport to "+resortName+" is "+time +" minutes");
+        } catch (Exception e) {
+            report.fail("Failed to get The Time from the Airport");
+        }
+
+
+    }
 
 
 
