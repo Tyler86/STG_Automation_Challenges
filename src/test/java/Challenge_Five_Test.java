@@ -1,11 +1,14 @@
 import Common.Navigate;
 import Common.Report;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.ITestContext;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import java.util.List;
 
 /**
  * Created by micro on 3/5/2018.
@@ -28,27 +31,21 @@ public class Challenge_Five_Test {
         nav.loadPage(ctx.getCurrentXmlTest().getParameter("url"));
         String title = "Utah Ski Trip";
         if (!nav.getTitle().contains(title)){
-            report.fail("Failed to load Home page");
+            report.fail("Failed to load Search page");
         }
-        SkiUtah_PO skiUtah  = new SkiUtah_PO(driver);
         Members_Listing_PO member = new Members_Listing_PO(driver);
 
         String what = ctx.getCurrentXmlTest().getParameter("what");
         String resort = ctx.getCurrentXmlTest().getParameter("resort");
         String subCategory = ctx.getCurrentXmlTest().getParameter("subCategory");
 
-        System.out.println(member.enterSearch(what,resort,subCategory));
+        List<WebElement> results = member.enterSearch(what,resort,subCategory);
     }
-/*
+
     @AfterClass
-    public void tearDown(){
-        if (driver!=null){
+    public void tearDown() {
+        if (driver != null) {
             driver.quit();
         }
-}
-*/
-
-
-
-
+    }
 }
