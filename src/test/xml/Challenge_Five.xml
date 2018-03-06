@@ -1,0 +1,14 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Stg Challenges" >
+    <test name="Challenge Four" >
+        <parameter name="url" value="https://www.skiutah.com/members/listing"/>
+
+        <parameter name="what" value="Activities"/>
+        <parameter name="resort" value="Deer Valley Resort"/>
+        <parameter name="subCategory" value="All Activities"/>
+        <classes>
+            <class name="Challenge_Five_Test" />
+        </classes>
+    </test>
+</suite>
