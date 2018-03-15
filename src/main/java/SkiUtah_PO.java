@@ -87,8 +87,14 @@ public class SkiUtah_PO {
         } catch (Exception e) {
             report.fail("Failed to get The Time from the Airport");
         }
-
-
+    }
+    public void verifyPageLoaded(){
+        try {
+            String homePageTitle = "Ski Utah | Utah Ski Resorts";
+            wait.until(ExpectedConditions.titleContains(homePageTitle));
+        } catch (Exception e) {
+            report.fail("Failed to load Home Page ");
+        }
     }
 
 
