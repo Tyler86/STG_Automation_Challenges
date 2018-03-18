@@ -11,7 +11,7 @@
     <test name="Challenge Eight" >
         <parameter name="url" value="https://www.skiutah.com"/>
         <classes>
-            <class name="Challenge_Eight_Test" />
+            <class name="Challenge_Seven_Test" />
         </classes>
     </test>
 
