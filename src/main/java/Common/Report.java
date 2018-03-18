@@ -1,10 +1,12 @@
 package Common;
 
-import org.junit.Assert;
+
+import org.testng.Assert;
 
 public class Report {
 
     public void fail(String failure){
+
         Assert.fail(failure);
     }
 

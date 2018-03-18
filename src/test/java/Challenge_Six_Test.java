@@ -3,6 +3,8 @@ import Common.Navigate;
 import Common.UrlChecker;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.ITestContext;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -26,39 +28,46 @@ public class Challenge_Six_Test {
     }
 
     @Test
-    public void challengeSix(ITestContext ctx){
+    public void challengeSix(ITestContext ctx)  {
         Navigate nav = new Navigate(driver);
         String url = ctx.getCurrentXmlTest().getParameter("url");
         nav.loadPage(url);
         SkiUtah_PO ski = new SkiUtah_PO(driver);
         ski.verifyPageLoaded();
         LinkCrawler linkcrawler = new LinkCrawler(driver);
-        List<String> urls = new ArrayList<String>();
+        List<String> urls;
+        List<String> newUrls;
         List<String> badUrls = new ArrayList<String>();
-        String baseUrl = "://www.skiutah.com";
+        String baseUrl = "skiutah.com";
 
         /// crawls home page for links
         urls = linkcrawler.findLinks(baseUrl);
-
+        String link = "";
         int status=0;
         for (int i=0; i<urls.size(); i++){
             System.out.println(urls.size() + " current index " + i );
-            System.out.println(urls.get(i));
-            driver.navigate().to(urls.get(i));
+            link = urls.get(i);
+            System.out.println(link);
             try {
-                status = urlchecker.checkUrl(urls.get(i));
+                status = urlchecker.checkUrl(link);
             } catch (IOException e) {
-                System.out.println(" unable to get url status for "+urls.get(i) );
+                System.out.println("unable to get link status");
             }
-
             if (status == 200) {
-                urls = linkcrawler.checkForDuplicates(urls, linkcrawler.findLinks(baseUrl));
+            driver.navigate().to(link);
 
-            }
-            else{
-                badUrls.add(url +"returned status of " +status);
+                newUrls = linkcrawler.findLinks(baseUrl);
+            for (String newLink : newUrls) {
+                if (!urls.contains(newLink)) {
+                    urls.add(newLink);
+                }
             }
         }
+        else{
+                badUrls.add(url + "returned status of " + status);
+            }
+        }
+
 
         System.out.println("------Bad Urls " +badUrls.size()+ "-------");
         for (String badurl: badUrls) {

@@ -26,9 +26,9 @@ public class Challenge_One_Test {
     }
     @AfterClass
     public void tearDown(){
-       if (driver!=null){
-           driver.quit();
-       }
+        if (driver!=null){
+            driver.quit();
+        }
 
 
     }

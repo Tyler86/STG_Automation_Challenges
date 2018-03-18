@@ -1,0 +1,18 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Stg Challenges" thread-count="3" parallel="tests" >
+  <!--  <test name="Challenge Seven" >
+        <parameter name="url" value="https://www.skiutah.com"/>
+        <classes>
+            <class name="Challenge_Seven_Test" />
+        </classes>
+    </test>-->
+
+    <test name="Challenge Eight" >
+        <parameter name="url" value="https://www.skiutah.com"/>
+        <classes>
+            <class name="Challenge_Eight_Test" />
+        </classes>
+    </test>
+
+</suite>

@@ -24,95 +24,25 @@ public class LinkCrawler {
         urlChecker = new UrlChecker();
     }
 
-
-
-
-    /*public void crawlLinks(String baseUrl){
-        try {
-            getLinks(baseUrl);
-            for (String url:urls) {
-                System.out.println(urls.size());
-                    System.out.println("Navigating to " + url);
-                    driver.navigate().to(url);
-                    getLinks(baseUrl);
-
-            }
-        } catch (Exception e) {
-            report.fail("Failed to navigate Links List");
-        }
-    }*/
-
-   /* public void printBadUrls(){
-        System.out.println("------------Bad Urls--------------------");
-
-        for (String badurl: badUrls) {
-            System.out.println(badurl);
-
-        }
-    }*/
-
-   /* public void getLinks(String baseUrl){
-        System.out.println("Crawling for links");
-        try {
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("a")));
-        } catch (Exception e) {
-            System.out.println("no link tags are present on the page");
-        }
-        final List<String> linksToClick = new ArrayList<String>();
-        final List<String> tempBadLinks = new ArrayList<String>();
-        List<WebElement> elements = driver.findElements(By.tagName("a"));
-        elements.addAll(driver.findElements(By.tagName("img")));
-        String url="";
-        int status;
-        for (WebElement e: elements ) {
-            try {
-                if (e.getAttribute("href")!=null){
-                    url = e.getAttribute("href");
-                    if (url.contains(baseUrl)
-                         && !linksToClick.contains(url)
-                         && !urls.contains(url)){
-                        status = urlChecker.checkUrl(url);
-                        if  (status == 200) {
-                            linksToClick.add(url);
-                        }
-                        else{
-                            tempBadLinks.add(url + " returned " + status);
-                        }
-                    }
-                }
-            } catch (Exception e1) {
-                System.out.println(" unable to get url from element "+ e.getAttribute("href"));
-            }
-        }
-        urls = new ArrayList<String>() { { addAll(urls); addAll(linksToClick); } };
-        badUrls = new ArrayList<String>() { { addAll(urls); addAll(tempBadLinks); } };
-        System.out.println("completed page crawl");
-
-    }
-*/
     public List<String> findLinks(String baseUrl){
         List<String> links = new ArrayList<String>();
 
         try {
             try {
-                wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("a")));
             } catch (Exception e) {
                 System.out.println("no link tags are present on the page");
             }
-            List<WebElement> elements = driver.findElements(By.tagName("a"));
-            elements.addAll(driver.findElements(By.tagName("img")));
+            List<WebElement> elements = driver.findElements(By.xpath("//a[contains(@href,'"+baseUrl+"')]"));
+            elements.addAll(driver.findElements(By.tagName("//img[contains(@href,'"+baseUrl+"')]")));
             String url="";
             for (WebElement e: elements ) {
                 try {
-                    if (e.getAttribute("href")!=null){
                         url = e.getAttribute("href");
-                        if (url.contains(baseUrl)
-                             && !links.contains(url)){
+                        if (!links.contains(url)){
                                 links.add(url);
                         }
-                    }
                 } catch (Exception e1) {
-                    System.out.println("unable to get url from element "+ e.getAttribute("href"));
+                    System.out.println("unable to get url from element "+url);
                 }
             }
         } catch (Exception e) {
