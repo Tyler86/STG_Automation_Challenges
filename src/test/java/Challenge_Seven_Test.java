@@ -17,7 +17,8 @@ import java.util.List;
 
 public class Challenge_Seven_Test {
 
-    private  WebDriver driver;    UrlChecker urlchecker;
+    private  WebDriver driver;
+    UrlChecker urlchecker;
 
 
     @BeforeClass
@@ -42,12 +43,16 @@ public class Challenge_Seven_Test {
         SkiUtah_PO ski = new SkiUtah_PO(driver);
         ski.verifyPageLoaded();
         LinkCrawler linkcrawler = new LinkCrawler(driver);
-        List<String> urls;
-        List<String> newUrls;
-        List<String> badUrls = new ArrayList<String>();
         String baseUrl = "skiutah.com";
+        linkcrawler.crawlpages(baseUrl,true,false);
 
-        HashMap<String,Integer> dictionary = new HashMap<String, Integer>();
+
+
+
+
+
+
+        /*        HashMap<String,Integer> dictionary = new HashMap<String, Integer>();
 
 
         /// crawls home page for links
@@ -95,7 +100,9 @@ public class Challenge_Seven_Test {
             else{
                 badUrls.add(url + "returned status of " + status);
             }
-
+            if (i==50){
+                break;
+            }
         }
 
 
@@ -124,6 +131,6 @@ public class Challenge_Seven_Test {
 
         } catch (Exception e) {
             System.out.println("failed to write dictionary to screen and text document");
-        }
+        }*/
     }
 }
