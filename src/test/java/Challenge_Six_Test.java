@@ -30,7 +30,7 @@ public class Challenge_Six_Test {
         LinkCrawler linkcrawler = new LinkCrawler(driver);
 
 
-        /// crawls home page for links
+        /// crawls Website for links
         String baseUrl = "skiutah.com";
         linkcrawler.crawlpages(baseUrl,false,false);
 

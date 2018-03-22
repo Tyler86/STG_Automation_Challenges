@@ -2,6 +2,8 @@ package Common;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.BufferedWriter;
@@ -18,7 +20,8 @@ public class LinkCrawler {
     Report report;
     UrlChecker urlChecker;
     HashMap<String,Integer> dictionary = new HashMap<String, Integer>();
-    List<String> urls;
+    List<String> urls= new ArrayList<String>();
+    List<String> visitedPages = new ArrayList<String>();
     List<String> newUrls;
     List<String> badUrls = new ArrayList<String>();
 
@@ -40,11 +43,14 @@ public class LinkCrawler {
                 System.out.println("no link tags are present on the page");
             }
             List<WebElement> elements = driver.findElements(By.xpath("//a[contains(@href,'"+baseUrl+"')]"));
-            elements.addAll(driver.findElements(By.tagName("//img[contains(@href,'"+baseUrl+"')]")));
+           // elements.addAll(driver.findElements(By.tagName("//img[contains(@href,'"+baseUrl+"')]")));
             String url="";
             for (WebElement e: elements ) {
                 try {
                         url = e.getAttribute("href");
+                    if (url.endsWith("/")){
+                        url = url.substring(0,url.lastIndexOf("/"));
+                    }
                         if (!links.contains(url)){
                                 links.add(url);
                         }
@@ -59,39 +65,50 @@ public class LinkCrawler {
     }
     public void crawlpages(String baseUrl, Boolean createDictionary, Boolean checkPictures){
 
-        /// crawls home page for links
-        urls = findLinks(baseUrl);
+        /// crawls  page for links
+        urls.add(0,baseUrl);
+
         String link = "";
         int status=0;
-        for (int i=0; i<urls.size(); i++){
-            if (createDictionary==true) {
-                  getWords();
-            }
+        for (int i=0; i<urls.size(); i++) {
 
-            System.out.println(urls.size() + " current index " + i );
+            System.out.println(urls.size() + " current index " + i);
             link = urls.get(i);
-            System.out.println(link);
-            status = getUrlStatus(link);
-            if (status == 200) {
-                driver.navigate().to(link);
-                newUrls = findLinks(baseUrl);
-                for (String newLink : newUrls) {
-                    if (!urls.contains(newLink)) {
-                        urls.add(newLink);
+
+            if (!visitedPages.contains(link)) {
+                System.out.println(link);
+                status = getUrlStatus(link);
+
+                if (status == 200) {
+                    driver.navigate().to(link);
+                    visitedPages.add(link);
+                    wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("body")));
+                    if (createDictionary == true) {
+                        getWords();
                     }
+                    if (checkPictures == true) {
+                        crawlImages();
+                    }
+
+                    newUrls = findLinks(baseUrl);
+                    for (String newLink : newUrls) {
+                        if (!urls.contains(newLink)) {
+                            urls.add(newLink);
+                        }
+                    }
+                } else {
+                    badUrls.add(link + "returned status of " + status);
+                }
+                if (i == 6) {
+                    break;
                 }
             }
-            else{
-                badUrls.add(link + "returned status of " + status);
+
             }
-            if (i==1){
-                break;
+            System.out.println("------There were " + badUrls.size() + " Bad Urls found-------");
+            for (String badurl : badUrls) {
+                System.out.println(badurl);
             }
-        }
-        System.out.println("------There were " +badUrls.size()+ " Bad Urls found-------");
-        for (String badurl: badUrls) {
-            System.out.println(badurl);
-        }
 
         // print dictionary to screen and save to a file
        if (createDictionary==true){
@@ -100,6 +117,41 @@ public class LinkCrawler {
     }
 
 
+    public void crawlImages(){
+        try {
+            String imageListx = "//img[contains(@src,'')]";
+            List<WebElement> imageList;
+            List<String> badImages = new ArrayList<String>();
+            imageList = driver.findElements(By.xpath(imageListx));
+            String url ="";
+            int urlStatus;
+            for(int i=0; i < imageList.size(); i++){
+
+                if (imageList.get(i).getAttribute("src") !=null) {
+                    url = imageList.get(i).getAttribute("src");
+
+                    try {
+                        urlStatus = urlChecker.checkUrl(url);
+                        if (urlStatus !=200){
+                            badImages.add("bad image link: "+ url);
+                        }
+                    } catch (Exception e) {
+                        badImages.add(" failed to get url status of: " +url);
+                    }
+                }
+            }
+            if (badImages.size()>0) {
+                System.out.println("----------------Troubled Images------------------------------");
+                for (String troubledImage : badImages) {
+                    System.out.println(troubledImage);
+                }
+                badImages.clear();
+            }
+        } catch (Exception e) {
+            System.out.println("Failed to Crawl Images");
+        }
+
+    }
 
 
 
