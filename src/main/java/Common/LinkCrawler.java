@@ -1,5 +1,6 @@
 package Common;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -64,6 +65,17 @@ public class LinkCrawler {
         return links;
     }
     public void crawlpages(String baseUrl, Boolean createDictionary, Boolean checkPictures){
+
+
+  /*      for (int i=0; i<25; i++) {
+            Thread.sleep(1000);
+            System.out.println("Check load status");
+            JavascriptExecutor js = (JavascriptExecutor)driver;
+            if (js.executeScript("return document.readyState").toString().equals("complete")) {
+                System.out.println("Loaded");
+                break;
+            }
+        }*/
 
         /// crawls  page for links
         urls.add(0,baseUrl);

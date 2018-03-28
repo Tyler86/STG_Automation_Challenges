@@ -2,7 +2,8 @@ package Common;
 
 import Common.Report;
         import org.openqa.selenium.By;
-        import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
         import org.openqa.selenium.support.ui.ExpectedConditions;
         import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -27,6 +28,7 @@ public class Navigate {
     }
 
     public String getTitle(){
+
         String title="";
         try {
             wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//title")));

@@ -2,7 +2,8 @@
 
 <suite name="Stg Challenges" >
     <test name="Challenge One" >
-        <parameter name="url" value="https://www.skiutah.com"></parameter>
+        <parameter name="url" value="https://test.mynuskin.com"></parameter>
+        <!--<parameter name="url" value="https://www.skiutah.com"></parameter>-->
         <classes>
             <class name="Challenge_One_Test" />
         </classes>
