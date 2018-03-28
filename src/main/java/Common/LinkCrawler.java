@@ -66,57 +66,34 @@ public class LinkCrawler {
     }
     public void crawlpages(String baseUrl, Boolean createDictionary, Boolean checkPictures){
 
-
-  /*      for (int i=0; i<25; i++) {
-            Thread.sleep(1000);
-            System.out.println("Check load status");
-            JavascriptExecutor js = (JavascriptExecutor)driver;
-            if (js.executeScript("return document.readyState").toString().equals("complete")) {
-                System.out.println("Loaded");
-                break;
-            }
-        }*/
-
         /// crawls  page for links
         urls.add(0,baseUrl);
-
         String link = "";
         int status=0;
         for (int i=0; i<urls.size(); i++) {
-
             System.out.println(urls.size() + " current index " + i);
             link = urls.get(i);
 
-            if (!visitedPages.contains(link)) {
-                System.out.println(link);
-                status = getUrlStatus(link);
-
-                if (status == 200) {
-                    driver.navigate().to(link);
-                    visitedPages.add(link);
-                    wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("body")));
-                    if (createDictionary == true) {
-                        getWords();
-                    }
-                    if (checkPictures == true) {
-                        crawlImages();
-                    }
-
-                    newUrls = findLinks(baseUrl);
-                    for (String newLink : newUrls) {
-                        if (!urls.contains(newLink)) {
-                            urls.add(newLink);
-                        }
-                    }
-                } else {
-                    badUrls.add(link + "returned status of " + status);
-                }
-                if (i == 6) {
-                    break;
-                }
+            System.out.println(link);
+            status = getUrlStatus(link);
+            if (status == 200) {
+                driver.navigate().to(link);
+                waitForPageLoad();
+                visitedPages.add(link);
+                getAndAddNewLinks(baseUrl);
+            } else {
+                badUrls.add(link + "returned status of " + status);
             }
-
+            if (createDictionary == true) {
+                getWords();
             }
+            if (checkPictures == true) {
+                crawlImages();
+            }
+            if (i == 6) {
+                break;
+            }
+        }
             System.out.println("------There were " + badUrls.size() + " Bad Urls found-------");
             for (String badurl : badUrls) {
                 System.out.println(badurl);
@@ -127,7 +104,28 @@ public class LinkCrawler {
             printDictionary();
        }
     }
+    private void getAndAddNewLinks(String baseUrl){
+        newUrls = findLinks(baseUrl);
+        for (String newLink : newUrls) {
+            if (!urls.contains(newLink)) {
+                urls.add(newLink);
+            }
+        }
+    }
+    private void waitForPageLoad(){
 
+    for (int j=0; j<25; j++) {
+        try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                 e.printStackTrace();
+            }
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            if (js.executeScript("return document.readyState").toString().equals("complete")){
+                break;
+            }
+        }
+    }
 
     public void crawlImages(){
         try {
@@ -172,28 +170,27 @@ public class LinkCrawler {
             File file = new File("C:\\temp\\dictionary.txt");
             file.delete();
             file.createNewFile();
+            int totalWords = 0;
 
             FileWriter fw = new FileWriter(file.getAbsoluteFile());
             BufferedWriter bw = new BufferedWriter(fw);
-
+            System.out.println("-------------------------Dictionary-----------------------");
             bw.write("-------------------------Dictionary-----------------------");
             bw.newLine();
             for ( String key: dictionary.keySet()) {
                 System.out.println(key +": " +dictionary.get(key));
                 bw.write(key +": " +dictionary.get(key));
                 bw.newLine();
+                totalWords += dictionary.get(key);
             }
-            bw.write(" some new test");
 
+            bw.write("Total Words " + totalWords);
+            System.out.println("Total Words " + totalWords);
             // Close connection
             bw.close();
         } catch (Exception e) {
             System.out.println("failed to write dictionary to screen and text document");
         }
-
-
-
-
     }
     private int getUrlStatus(String link){
         int status=0;
@@ -216,7 +213,7 @@ public class LinkCrawler {
                         dictionary.put(word, 1);
                     } else if (!word.equals("")) {
                         int temp = dictionary.get(word);
-                        dictionary.remove(word);
+                       // dictionary.remove(word);
                         dictionary.put(word, temp + 1);
                     }
                 }

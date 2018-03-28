@@ -3,7 +3,7 @@
 <suite name="Stg Challenges" thread-count="3" parallel="tests" >
 
     <test name="Challenge Eight" >
-        <parameter name="url" value="https://www.skiutah.com"/>
+        <parameter name="url" value="https://theplacetogo.net"/>
         <classes>
             <class name="Challenge_Eight_Test" />
         </classes>

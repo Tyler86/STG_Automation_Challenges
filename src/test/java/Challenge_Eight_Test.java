@@ -30,9 +30,9 @@ public class Challenge_Eight_Test {
             String url = ctx.getCurrentXmlTest().getParameter("url");
             nav.loadPage(url);
             SkiUtah_PO ski = new SkiUtah_PO(driver);
-            ski.verifyPageLoaded();
+            //ski.verifyPageLoaded();
             LinkCrawler linkcrawler = new LinkCrawler(driver);
-            linkcrawler.crawlpages(url,false,true);
+            linkcrawler.crawlpages(url,true,true);
 
         }
 
